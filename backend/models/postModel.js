@@ -1,7 +1,4 @@
 import mongoose from "mongoose";
-import { DB_URL } from "../config";
-
-mongoose.connect(DB_URL)
 
 
 const postSchema  = new mongoose.Schema({

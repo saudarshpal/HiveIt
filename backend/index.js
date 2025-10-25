@@ -1,12 +1,19 @@
 import express from 'express';
-import userRouter from './routes/user'
-import communityRouter from './routes/community'
-import postRouter from './routes/post'
+import primaryRouter from './routes/index.js'
+import { connectToDB, PORT_NO } from './config.js';
+import cors from 'cors';
 
 
-const router = express.Router();
+const app = express()
+connectToDB();
 
 
-router.get('/user',userRouter);
-router.get('/community',communityRouter)
-router.get('/post',postRouter)
+app.use(cors())
+app.use(express.json())
+
+app.use('/api/v1',primaryRouter)
+
+
+app.listen(PORT_NO,()=>{
+    console.log("Server is Running")
+})

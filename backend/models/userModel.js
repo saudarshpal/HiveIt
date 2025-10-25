@@ -1,7 +1,5 @@
-import mongoose, { mongo } from "mongoose";
-import { DB_URL } from "../config";
+import mongoose from "mongoose";
 
-mongoose.connect(DB_URL)
 
 const userSchema = new mongoose.Schema({
     username : {
@@ -37,7 +35,15 @@ const userSchema = new mongoose.Schema({
             type : String,
             maxLength : 150,
         }
+    },
+    verificationToken :{
+        type : String
+    },
+    verified : {
+        type : Boolean,
+        default : false,
     }
+
 })
 
 const User = mongoose.model('User',userSchema)

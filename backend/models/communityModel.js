@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
-import { DB_URL } from "../config";
 
-mongoose.connect(DB_URL)
 
 const communitySchema = new mongoose.Schema({
       name : {
