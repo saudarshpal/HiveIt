@@ -1,0 +1,61 @@
+import mongoose from "mongoose";
+import { DB_URL } from "../config";
+
+mongoose.connect(DB_URL)
+
+
+const postSchema  = new mongoose.Schema({
+    title :{
+        type : String,
+        required : true
+    },
+    content :{
+        type : String ,
+        required : true
+    },
+    author :{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'User'
+    },
+    community : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Community'
+    },
+    votes : {
+        upvotes : {
+            type : Number,
+            default : 0
+        },
+        downvotes : {
+            type : Number,
+            default : 0
+        }
+    },
+    comments : [
+        {
+            author : {
+                type : mongoose.Schema.Types.ObjectId,
+                ref : 'User'
+            },
+            content : {
+                type : String,
+                required : true,
+            },
+            votes : {
+                upvotes : {
+                    type : Number,
+                    default : 0
+                },
+                downvotes : {
+                    type : Number,
+                    default : 0
+                }
+            }
+        }
+    ]   
+})
+
+
+const Post = mongoose.model('Post',postSchema)
+
+export default Post 
