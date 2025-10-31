@@ -229,8 +229,11 @@ export const subscribe = async(req,res)=>{
                 msg : "Community Not Found"
             })
         }   
+        if(community.subscribers.includes(userId)){
+            return res.status(400).json({msg : "Already Subscribed"})
+        }
         community.subscribers.push(userId)
-        community.count.subscribers += 1
+        community.count.subscribers ++
         await community.save()
 
         return res.status(200).json({msg : "Community Followed"}) 
@@ -245,7 +248,6 @@ export const subscribe = async(req,res)=>{
 export const unSubscribe = async(req,res)=>{
     const userId = req.userId
     const {communityId} = req.params 
-
     try{
         const community = await Community.findById(communityId)
 
@@ -271,7 +273,6 @@ export const unSubscribe = async(req,res)=>{
 
 export const getCommunities = async(req,res)=>{
     const userId = req.userId
-
     try{
         let communities = await Community.find({
             subscribers : userId

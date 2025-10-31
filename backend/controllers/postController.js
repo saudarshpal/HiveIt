@@ -7,13 +7,14 @@ import User from "../models/userModel.js"
 export const createPost = async(req,res)=>{
     const userId = req.userId
     const {title,content,communityName} = req.body
+    console.log("Post data received:", { title, content, communityName });
     try{
         let user = await User.findById(userId) 
         let community = await Community.findOne({
             name : communityName
         })
         if(!user || !community){
-            return res.status(400).json({
+            return res.status(404).json({
                 msg:"User/Community not found"
             })
         }
@@ -83,7 +84,7 @@ export const getPostById = async(req,res)=>{
 
 export const getAllPosts = async(req,res)=>{
     try{
-        let posts = await Post.find({}) 
+        let posts = await Post.find() 
         return res.status(200).json({
             posts
         })      
@@ -114,24 +115,25 @@ export const voteOnPost = async(req,res)=>{
     const {postId} = req.params
     const {voteType} = req.body
     try{
-       let post = Post.findById(postId)
+       let post = await Post.findById(postId)
        if(!post){
             return res.status(404).json({
                 msg : "Invalid Posts"
            })
         }
         if(voteType === "upvote"){
-            post.votes.upvotes ++;
+            post.votes.upvotes++;
         } 
         else if(voteType === "downvote"){
-            post.votes.downvotes ++;
+            post.votes.downvotes++;
         }
         else if(voteType === "removeUpvote" && post.votes.upvotes > 0){
             post.votes.upvotes --;
         }
         else if(voteType === "removeDownvote" && post.votes.downvotes > 0){
             post.votes.downvotes --;
-        }   
+        }  
+        await post.save() 
         return res.status(200).json({
             msg : "Voted Successfully"
         })    
@@ -235,23 +237,26 @@ export const voteOnComment = async(req,res)=>{
             })
         }
         let comment = post.comments.find(comment => comment._id.toString() === commentId)
+        
         if(!comment){
             return res.status(404).json({
                 msg : "Invalid Comment"
             })
         }
         if(voteType === "upvote" ){
-            comment.votes.upvotes ++;
+            comment.votes.upvotes++;
         }
         else if(voteType === "downvote"){
-            comment.votes.downvotes ++;
+            comment.votes.downvotes++;
         }
-        else if(voteType === "removeUpvote" && comment.vote.upvotes > 0){
-            comment.votes.upvotes --;
+        else if(voteType === "removeUpvote" && comment.votes.upvotes > 0){
+            comment.votes.upvotes--;
         }
-        else if(voteType === "removeDownvote" && comment.vote.downvotes > 0){
-            comment.votes.downvotes --;
+        else if(voteType === "removeDownvote" && comment.votes.downvotes > 0){
+            comment.votes.downvotes--;
         }
+        console.log(comment.votes)
+        await post.save()
         return res.status(200).json({
             msg : "Voted on comment"
         })

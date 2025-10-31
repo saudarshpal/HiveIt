@@ -1,19 +1,21 @@
 import express from "express";
-import { commentOnPost, createPost, deleteComment, getAllcomments, getAllPosts, getPostById, getYourPosts, voteOnPost} from "../controllers/postController.js";
-import { deleteModel } from "mongoose";
+import { commentOnPost, createPost, deleteComment, deletePost, getAllcomments, getAllPosts, getPostById, getYourPosts, voteOnComment, voteOnPost} from "../controllers/postController.js";
+import { authMiddleware } from "../middlewares/auth.js";
 
 const router = express.Router()
 
-router.post('/create',createPost)
-router.delete('/:postId',deleteModel)
-router.get('/:postId',getPostById)
-router.get('/all',getAllPosts)
-router.get('/own',getYourPosts)
-router.post('/:postId/votes',voteOnPost)
-router.post('/:postId/comments',commentOnPost)
-router.get('/:postId/comments',getAllcomments)
-router.delete('/:postId/comments/:commentId',deleteComment)
-router.post('/:postId/comments/:commentId/votes',voteOnPost)
+router.use(authMiddleware)
+
+router.post('/create',createPost) // create a post
+router.get('/all',getAllPosts) // get all posts
+router.get('/own',getYourPosts) // get your posts
+router.delete('/:postId/delete',deletePost) // delete a post
+router.get('/:postId',getPostById) // get post by id
+router.post('/:postId/votes',voteOnPost) // vote on post
+router.post('/:postId/comments',commentOnPost) // comment on post
+router.get('/:postId/comments',getAllcomments) // get all comments on post
+router.delete('/:postId/comments/:commentId/delete',deleteComment) // delete comment
+router.post('/:postId/comments/:commentId/votes',voteOnComment)// vote on comment
 
 
 

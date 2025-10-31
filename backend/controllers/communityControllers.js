@@ -112,14 +112,13 @@ export const getCommunityById = async(req,res)=>{
 
 
 export const getcommunityPosts = async(req,res)=>{
-    const userID = req.userId
     const {communityId} = req.params
     try{
         const community = await Community.findById(communityId)
         if(!community){
             return res.status(404).json({msg : "Community not found"})
         }
-        const posts = await Post.find({community : communityId, author : userId})
+        const posts = await Post.find({community : communityId})
         return res.status(200).json({posts : posts})
     }catch(err){
         console.log(err)

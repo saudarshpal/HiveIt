@@ -12,17 +12,17 @@ const upload = multer({dest : 'uploads/'})
 const uploadMiddleware = upload.fields([{name : 'avatar', maxCount : 1},{name : 'userBanner', maxCount : 1}])
 
 
-router.post('/signup',Signup)
+router.post('/signup',Signup) 
 router.get('/verify/:verificationToken',Verify)
 router.post('/signin',Signin)
-router.get('/u',authMiddleware,getUserById)
-router.get('/bulk',authMiddleware,getUsers)
-router.post('/settings/profile',authMiddleware,uploadMiddleware,createProfile)
-router.post('/:followUserId',authMiddleware,followUser)
-router.delete('/:unfollowUserId',authMiddleware,unfollowUser)
-router.post('/:communityId',authMiddleware,subscribe)
-router.delete('/:communityId',authMiddleware,unSubscribe)
-router.get('/coummunity/',authMiddleware,getCommunities)
+router.get('/u',authMiddleware,getUserById)// get user by id
+router.get('/bulk',authMiddleware,getUsers)// get all users
+router.post('/settings/profile',authMiddleware,uploadMiddleware,createProfile)// create or update user profile
+router.post('/:followUserId',authMiddleware,followUser) // follow user
+router.delete('/:unfollowUserId',authMiddleware,unfollowUser) // unfollow user
+router.post('/:communityId/subscribe',authMiddleware,subscribe)// subscribe to community
+router.post('/:communityId/unsubscribe',authMiddleware,unSubscribe) // unsubscribe from community
+router.get('/community',authMiddleware,getCommunities) //get communities for specific user
 
 
 
