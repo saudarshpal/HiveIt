@@ -121,7 +121,7 @@ export const Signin = async(req,res)=>{
 }
 
 export const getUserById = async(req,res)=>{
-    const userId = req.userId
+    const {userId} = req.params
     try{
         const user = await User.findById(userId)
         if(!user){

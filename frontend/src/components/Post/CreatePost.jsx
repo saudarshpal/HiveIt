@@ -6,9 +6,13 @@ import { Button } from "@/components/ui/button"
 import { Upload, X } from "lucide-react";
 import { useRecoilState } from "recoil";
 import { createModalAtom} from "@/store/atoms/Modal";
+import { useState } from "react";
 
 const CreatePost=()=> {
   const [modal,setModal] = useRecoilState(createModalAtom)
+  const [title,setTitle] = useState('')
+  const [content,setContent] = useState('')
+
   return (
     <>
       {modal==="createPost" && (
@@ -25,10 +29,7 @@ const CreatePost=()=> {
                 <label className="block text-sm font-medium mb-2 text-gray-300">
                   Title
                 </label>
-                <Input
-                  className="bg-neutral-800 border-gray-700 text-white placeholder-gray-500"
-                  placeholder="Enter post title"
-                />
+                <Input value={title} onChange={(e)=>setTitle(e.target.value)} className="bg-neutral-800 border-gray-700 text-white placeholder-gray-500" placeholder="Enter post title"/>
               </div>
 
               {/* Description */}

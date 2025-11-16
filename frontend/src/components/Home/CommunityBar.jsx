@@ -1,7 +1,17 @@
 import { SearchIcon } from "lucide-react"
-import CommunityProfileCard from "@/components/Community/CommunityProfileCard"
+import CommunityProfileCard from "@/components/Home/CommunityProfileCard"
+import axios from "axios"
+import { useEffect, useState } from "react"
 
 const CommunityBar = () => {
+  const [communities,setCommunities] = useState([])
+  const fetchCommunities = async()=>{
+    const response = await axios.get(`${import.meta.env.VITE_APP_BASE_URL}/bulk`)
+    setCommunities(response.data.commmunities)
+  }
+  useEffect(()=>{
+    fetchCommunities()
+  },[])
   return (
     <div className=" h-full rounded-lg">
         <div className="w-full flex flex-col items-center">
@@ -10,10 +20,9 @@ const CommunityBar = () => {
                 <input type="text" placeholder="Search Communities " className=" text-white px-1 w-full outline-none rounded-full placeholder:text-sm "></input>
             </div>
             <div className="w-full flex flex-col gap-2">
-              <CommunityProfileCard />
-              <CommunityProfileCard />
-              <CommunityProfileCard />
-
+              {
+                communities.map((c,index)=> <CommunityProfileCard key={index} community={c} />)
+              }
             </div>
             
           </div>

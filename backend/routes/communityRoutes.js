@@ -13,10 +13,10 @@ const uploadBanner = upload.single('communityBanner')
 
 router.get('/bulk',getCommunities) // get all communities
 router.put('/create',createCommunity) //create community
-router.put('/create/upload/:communityId',uploadBanner,updateBanner) //update community banner
+router.put('/create/upload/:communityId',uploadBanner,updateBanner) //update community banner // add thisto the create part
 router.get('/:communityId',getCommunityById)// get community by id
-router.get('/:communityId/posts',getcommunityPosts) // get all posts of a community 
+router.get('/posts/:communityId/',getcommunityPosts) // get all posts of a community 
 router.delete('/:communityId/delete',deleteCommunity) // delete a community
-router.put('/:communityId/add-moderator/:moderatorId',addModerator)// adds a moderator to community
+router.put('/add-moderator/:communityId/:moderatorId',addModerator)// adds a moderator to community
 
 export default router
