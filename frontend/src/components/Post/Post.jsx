@@ -11,26 +11,31 @@ import { useEffect } from "react"
 import { postIdAtom } from "@/store/atoms/Post"
 import { useCallback } from "react"
 import useThrottle from "@/hooks/useThrottle"
+import axios from "axios"
+
   
 
 
 const Post=({post})=>{
+  const setModal = useSetRecoilState(createModalAtom)
   const setPostId = useSetRecoilState(postIdAtom)
+  const [user,setUser] = useState({})
+  const [community,setCommunity] = useState({})
   const postId = post._id
+  const authorId = post.author
   const communityId = post.community
   const commentCount = post.comments.length
   const upvotes  = post.votes.upvotes
   const downvotes = post.votes.downvotes 
   const images = post.images
-  const setModal = useSetRecoilState(createModalAtom)
   const [vote,setVote] = useState('unvote') 
   const [upVoteCount,setUpVoteCount] = useState(upvotes)
   const [downVoteCount,setDownVoteCount] = useState(downvotes)
   const [buttoncolor,setButtonColor] = useState('bg-neutral-600')
   const [downVoteClick, setDownVoteClick] = useState(false)
   const [upVoteClick, setUpVoteClick] = useState(false)
-  const navigate = useNavigate()
   const authHeader = localStorage.getItem('authHeader')
+  const navigate = useNavigate()
   const handleUpVote = ()=>{
     if(vote==="unvote"){
       setVote("upvote")
@@ -85,6 +90,22 @@ const Post=({post})=>{
       throttledVoteRequest('unvote')
     }   
   } 
+  const getUser = async()=>{
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/${authorId}`,{
+      headers : {
+        'Authorization' : authHeader
+      }
+    })
+    setUser(response.data.user)
+  }
+  const getCommunity = async()=>{
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/${communityId}`,{
+      headers : {
+        'Authorization' : authHeader
+      }
+    })
+    setCommunity(response.data.community)
+  }
   const handleUpdateVote = useCallback(async(vote)=>{
       await axios.post(`${import.meta.env.VITE_API_BASE_URL}/post/vote/${postId}`,{voteType:vote},{
           headers : {
@@ -96,18 +117,20 @@ const Post=({post})=>{
   
   useEffect(()=>{
     if(post?._id) setPostId(post._id)
+    getUser()
+    getCommunity()
   },[postId])
   return (
     <div className="border-solid border-y border-neutral-800 p-1">
         <div className="flex flex-col gap-1 hover:bg-neutral-800 rounded-lg px-4 py-1 ">
-            <div className="flex itmes-center justify-start  pt-2 gap-2">
-                <Avatar className='w-8 h-8 cursor-pointer' onClick={()=>navigate(`/user/${userId}`)}>
-                  <AvatarImage />
-                  <AvatarFallback>{post.author.charAt(0)}</AvatarFallback>
+            <div className="flex itmes-center justify-start  pt-2 gap-1">
+                <Avatar className='w-8 h-8 cursor-pointer' onClick={()=>navigate(`/user/${authorId}`)}>
+                  <AvatarImage src={user?.profile?.avatar?.url}/>
+                  <AvatarFallback>{user?.username?.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-wrap gap-1 items-center justify-start ">
-                  <span className="text-neutral-500 text-sm font-semibold pt-1">{post.username}</span>
-                  {post.community && <span onClick={()=>navigate(`/community/${communityId}`)} className="text-neutral-500 text-sm font-semibold pt-1 hover:text-neutral-300 cursor-pointer">[{post.community}]</span>}
+                  <span className="text-neutral-500 text-sm font-semibold pt-1">{user.username}</span>
+                  <span onClick={()=>navigate(`/community/${communityId}`)} className="text-neutral-500 text-sm font-semibold pt-1 hover:text-neutral-300 cursor-pointer">[{community.name}]</span>
                 </div>  
             </div>
             <div className="flex flex-col px-2 py-2.5">

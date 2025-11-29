@@ -25,7 +25,7 @@ const CommentSection =()=>{
     setPostComments(response.data.comments)
   }
   const CreateComment = async()=>{
-       await axios.post( `${import.meta.env.VITE_API_BASE_URL}/post/comment/${postId}`,{content: comment},{
+       await axios.post( `${import.meta.env.VITE_API_BASE_URL}/post/comment/${postId}`,{content: addcomment},{
           headers : {
             Authorization : authHeader
         }
@@ -33,7 +33,6 @@ const CommentSection =()=>{
   }
   useEffect(()=>{
     getPostComments()
-    fetchPostComments()
   },[])
   return (
     <>
@@ -50,7 +49,7 @@ const CommentSection =()=>{
                   <div className="space-y-3 pb-4 border-b border-neutral-800">
                     <Textarea value={addcomment} onChange={(e)=>setAddComment(e.target.value)} placeholder="Write a comment..."
                               className="bg-neutral-800 border-neutral-700 text-neutral-200 resize-none"/>
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={CreateComment}>Comment</Button>
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer" onClick={CreateComment}>Comment</Button>
                   </div>
                   <CommentsList comments={postcomments} postId={postId}/>  
               </CardContent>

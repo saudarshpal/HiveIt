@@ -31,13 +31,17 @@ export const createPost = async(req,res)=>{
             })
             }  
         }
-        await Post.create({
+        const post = await Post.create({
             title,
             content,
             images : postImages,
             author : userId,
             community : community._id
         })
+        community.posts.push(post._id)
+        community.count.posts += 1
+        await community.save()
+
         return res.status(200).json({
             msg : "Post Created"
         })

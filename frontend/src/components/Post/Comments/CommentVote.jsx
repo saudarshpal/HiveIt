@@ -1,6 +1,8 @@
 import useThrottle from "@/hooks/useThrottle"
 import axios from "axios"
+import { useState } from "react"
 import { useCallback } from "react"
+import { TbArrowBigDown, TbArrowBigDownFilled, TbArrowBigUp, TbArrowBigUpFilled } from "react-icons/tb"
 
 
 const CommentVote = ({comment,postId}) => {
@@ -78,7 +80,7 @@ const CommentVote = ({comment,postId}) => {
     const throttledVoteRequest = useThrottle(handleUpdateVote, 4000)
   return (
     <>
-      <div  className={`${buttoncolor} text-white text-sm rounded-full flex flex-row items-center gap-1 p-1.5`}>
+      <div  className={`${buttoncolor} text-white text-sm rounded-full flex flex-row items-center gap-1 p-1/2`}>
                                           {upVoteClick ? <TbArrowBigUpFilled size={18} color="white" onClick={handleUpVote} className={`rounded-full cursor-pointer`}/>
                                                        : <TbArrowBigUp size={18} color="white" onClick={handleUpVote} className={`rounded-full cursor-pointer`}/>}
                                             {upVoteCount}
